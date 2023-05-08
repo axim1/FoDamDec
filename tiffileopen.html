@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Maps API Example</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDb8mFgFjes8xE_w344q1xbRwa1UKS_o5M"></script>
+  <script>
+    function initMap() {
+      // Create a new map object
+      var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 37.7749, lng: -122.4194},
+        zoom: 8
+      });
+    }
+  </script>
+  
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      padding: 20px;
+      text-align: left;
+      background-image:  url("main.jpeg");
+    
+      
+    }
+
+    .header h1 {
+      margin: 0;
+      /* background-color: rgba(85, 90, 62, 0.411); */
+
+      font-size: 45px;
+      letter-spacing: 0px;
+      padding-top: 230px;
+      padding-bottom: 80px;
+      padding-left: 50px;
+    }
+
+    .image-carousel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 400px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      
+    
+    }
+
+    .image-carousel img {
+      max-height: 400px;
+      object-fit: contain;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .image-carousel img:hover {
+      transform: scale(1.1);
+    }
+    #mapContainer {
+      width: 50%;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #geojsonDropdown {
+      margin: 30px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #fff;
+      color: rgb(7, 5, 5);
+      cursor: pointer;
+    }
+
+    #geojsonDropdown option {
+      background-color: #fff;
+      color: rgb(7, 5, 5);
+    }
+    #mapContainer {
+      display: flex;
+      width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+     #map {
+      height: 100vh;
+      width: 60%;
+      padding: 0px;
+      margin: 50px;
+    } 
+
+    .image-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 0px;
+    }
+    #results{
+      display: flex;
+      width: 100%;
+    }
+
+    .image-column img {
+      max-width: 60%;
+      margin-bottom: 10px;
+    }
+    
+    /* #map{
+      width: 100%;
+      height: 70vh;
+    } */
+  </style>
+</head>
+
+
+<body onload="initMap()">
+  <div class="header">
+    <h1>Forest Damage Detection Using Unsupervised Learning</h1>
+  </div>
+    <!-- <div class="image-carousel">
+      <img src="https://placekitten.com/800/400" alt="Carousel Image 1">
+      <img src="https://placekitten.com/801/400" alt="Carousel Image 2">
+      <img src="https://placekitten.com/802/400" alt="Carousel Image 3">
+    </div> -->
+
+ 
+    <label for="geojsonDropdown">Select Region:</label>
+
+    <select id="geojsonDropdown">
+      <option value="">- Select -</option>
+    </select>
+    <br>
+    <div id="mapContainer">
+      <div id="map"></div>
+      <div class="image-column">
+        <h2>Pre Fire Image</h2>
+        <img src="CPT46_PREFIRE.png" alt="Image 1">
+        <h2>Post Fire Image</h2>       
+        <img src="CPT46_POSTFIRE.png" alt="Image 2">
+      </div>
+    </div>
+    <div class="results">
+    <div>
+      <h2>Ground Truth</h2>
+      <img src="CPT46_Ground_Truth_Validation.png" alt="">
+    </div>
+    <div>
+      <h2>Results</h2>
+      <img src="ee-chart.png" alt="">
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+<script>
+  function initMap() {
+    // Create a new map object
+    var map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 33.67146196312361, lng: 73.52108729277924},
+      //73.52108729277924,33.67146196312361
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.SATELLITE
+    });
+
+    // Create a new data layer object
+    var dataLayer = new google.maps.Data();
+
+
+
+      // Load the GeoJSON data into the data layer
+      function loadGeoJSON(file) {
+  // Clear existing data layer
+  dataLayer.setMap(null);
+  dataLayer = new google.maps.Data();
+
+  // Load the GeoJSON data into the data layer
+  dataLayer.loadGeoJson(file, null, function(features) {
+    // Add the data layer to the map
+    dataLayer.setMap(map);
+    dataLayer.setStyle(function(feature) {
+      // Set the style based on the label property of the feature
+      var color, strColor;
+      console.log(feature.getProperty('label'));
+      switch (feature.getProperty('label')) {
+        case 1:
+          color = '#006400';
+          strColor = 'purple';
+          break;
+        case 2:
+          color = '#228B22';
+          strColor = 'purple';
+          break;
+        case 3:
+          color = '#0ae042';
+          strColor = 'purple';
+          break;
+        case 4:
+          color = '#fff70b';
+          strColor = 'cyan';
+          break;
+        case 5:
+          color = '#ffaf38';
+          strColor = 'pink';
+          break;
+        case 6:
+          color = '#ff641b';
+          strColor = 'purple';
+          break;
+        case 7:
+          color = '#FF0000';
+          strColor = 'purple';
+          break;
+        default:
+          color = 'gray';
+      }
+      return {
+        fillColor: color,
+        strokeColor: strColor,
+        strokeWeight: 0
+      };
+    });
+
+    // Get the bounds of the GeoJSON features
+    var bounds = new google.maps.LatLngBounds();
+    features.forEach(function(feature) {
+      feature.getGeometry().forEachLatLng(function(latlng) {
+        bounds.extend(latlng);
+      });
+    });
+
+    // Center and fit the map to the bounds
+    map.fitBounds(bounds);
+  });
+}
+
+
+
+
+
+
+
+
+    // Handle selection change in the dropdown menu
+    function handleSelectionChange() {
+      var selectedFile = this.value;
+      if (selectedFile !== '') {
+        loadGeoJSON(selectedFile);
+      }
+    }
+
+    // Get the dropdown element
+    var dropdown = document.getElementById('geojsonDropdown');
+
+    // Attach event listener to handle selection change
+    dropdown.addEventListener('change', handleSelectionChange);
+
+    // Add options to the dropdown menu
+    function addOptionToDropdown(file) {
+      var option = document.createElement('option');
+      option.value = file;
+      option.text = file;
+      dropdown.appendChild(option);
+    }
+
+    // Define an array of GeoJSON files
+    var geojsonFiles = [
+      'classified_features.geojson',
+      'cpt61.geojson',
+      'CPT46_JSONFILE.geojson'
+    ];
+
+    // Add options for each GeoJSON file to the dropdown menu
+    geojsonFiles.forEach(function(file) {
+      addOptionToDropdown(file);
+    });
+  }
+</script>
+
+</script>
+<script src="classified_features.geojson"></script>
+  
+  <style>
+
+  </style>
